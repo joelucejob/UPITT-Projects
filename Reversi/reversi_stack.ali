@@ -1,0 +1,109 @@
+V "GNAT Lib v6.2"
+P SS ZX
+R nnnnnnnnnnnnnnnnnnvnnnvnnnvnnnnnnnnnnnnvnnnnnnnnnnnnnnnnnvnnnnnnnnnnnnnnnn
+
+U reversi_stack%b	reversi_stack.adb	935980a2 NE OO PK IL
+W ada%s			ada.ads			ada.ali
+W ada.exceptions%s	a-except.adb		a-except.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+
+U reversi_stack%s	reversi_stack.ads	f8b08c9e EE OO PK IL
+W ada.tags%s		a-tags.adb		a-tags.ali
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20080522031727 9c7dd3ea
+D a-except.ads		20080522031647 b54b55de
+D a-finali.ads		20080522031650 9eaacebd
+D a-filico.ads		20080522031649 9299732a
+D a-inteio.ads		20080522031650 03bc737c
+D a-ioexce.ads		20080522031652 be0900a0
+D a-stream.ads		20080522031703 34aca5be
+D a-tags.ads		20080522031712 bfa07446
+D a-textio.ads		20080522031713 bc6e78fe
+D a-tiinio.ads		20080522031716 949a7272
+D a-unccon.ads		20080522031717 51e09df2
+D interfac.ads		20080522031816 a69cad5c
+D i-cstrea.ads		20080522031813 e1e064a9
+D reversi_stack.ads	20140424071616 f8b08c9e
+D reversi_stack.adb	20140424072017 d43b07be
+D system.ads		20080522032001 53113720
+D s-crtl.ads		20080522031842 997234a1
+D s-exctab.ads		20080522031843 5c1c61ae
+D s-ficobl.ads		20080522031845 8bb681e5
+D s-finimp.ads		20080522031846 9449f4cb
+D s-finroo.ads		20080522031846 1408f9d1
+D s-parame.ads		20080522031916 f32e56e9
+D s-secsta.ads		20080522031919 7bae3621
+D s-soflin.ads		20080522031920 0c6fd39d
+D s-stache.ads		20080522031922 257b3be8
+D s-stalib.ads		20080522031922 52b793d5
+D s-stoele.ads		20080522031923 ed966df3
+D s-stoele.adb		20080522031923 e9998c78
+D s-stratt.ads		20080522031924 fef7c1da
+D s-traent.ads		20080522031936 bd5f2753
+D s-unstyp.ads		20080522031937 c0f9fae5
+D s-wchcon.ads		20080522031943 ab028799
+X 1 ada.ads
+16K9*Ada 19e8 15|1r6 1r23 2r6 2r31
+X 5 a-inteio.ads
+18K13*Integer_Text_IO[10|48] 15|2w10 2r35
+X 9 a-textio.ads
+51K13*Text_IO 483e16 15|1w10 1r27
+245U14*Put 15|44r17
+245s19 Item{string} 15|44r21
+X 14 reversi_stack.ads
+1K9*reversi_stack 51l5 51e18 15|4b14 125l5 125t18
+3i9*StackMaximum{integer} 35r37 36r37 41r41 44r38 48r39 15|23r26 24r39 41r26
+4I17*RowItem{integer} 13r36 16r36 29r33 35r54 15|16r32 52r32 115r52
+5E17*ColItem{character} 14r36 17r36 30r33 36r54 15|17r32 53r32 115r69
+6R14*Stack 12r46 15r45 18r45 20r44 22r47 24r42 26r39 28r40 46c14 49e19 15|8r41
+. 15r42 38r41 51r41 77r40 89r43 96r39 108r39 115r37
+7R14*Flips 38c14 42e19 44r55
+9X9*StackUnderflow
+10X9*StackOverflow 15|29r23 32r23 45r23
+12U19*Push_Flips 12=31 13>25 14>25 15|15b15 34l9 34t19
+12r31 AStack{6R14} 15|15b27 19r24 20r24 23r13 24r16 25m17 25r41 26m17 27m17
+13i25 RItem{4I17} 15|16b21 26r43
+14e25 CItem{5E17} 15|17b21 27r43
+15U19*Pop_Flips 15=30 16<24 17<24 15|51b15 72l9 72t18
+15r30 AStack{6R14} 15|51b26 55r24 62r13 63r16 64r26 64r46 65r26 65r46 69m17
+. 69r41
+16i24 RItem{4I17} 15|52b20 64m17
+17e24 CItem{5E17} 15|53b20 65m17
+18U19*Push_Move 18=30 15|38b15 47l9 47t18
+18r30 AStack{6R14} 15|38b26 41r13 42m17 42r31
+20U19*Pop_Move 20=29 15|77b15 85l9 85t17
+20r29 AStack{6R14} 15|77b25 79r24 82r13 83m17 83r31
+22U19*SMakeEmpty 22=31 15|89b15 92l9 92t19
+22r31 AStack{6R14} 15|89b27 91m9
+24V18*check_empty{boolean} 24>30 15|96b14 104l9 104t20
+24r30 AStack{6R14} 15|96b27 98r12 99r20 99r33
+26V18*GiveTurn{integer} 26>27 15|108b18 111l13 111t21
+26r27 AStack{6R14} 15|108b27 110r24
+28U19*GiveInfo 28>28 29<25 30<25 31>25 15|115b15 122l9 122t17
+28r28 AStack{6R14} 15|115b25 118r12 119r22 120r22
+29i25 R{4I17} 15|115b44 119m17
+30e25 C{5E17} 15|115b61 120m17
+31i25 T{integer} 15|116b25 119r35 120r35
+35A14 row_array(4I17)<integer> 39r23
+36A14 col_array(5E17)<integer> 40r23
+39a17*Row{35A14} 15|26m33 64m42 119m38
+40a17*Col{36A14} 15|27m33 65m42 120m38
+41i17*Top2{integer} 15|20r40 24r32 25m33 25r57 63r32 64r62 65r62 69m33 69r57
+. 99r45
+44A14 Move_Array(7R14)<integer> 47r25
+47a17*Moves{44A14} 15|20m31 24m23 25m24 25m48 26m24 27m24 63m23 64m33 64m53
+. 65m33 65m53 69m24 69m48 99m27 119m29 120m29
+48i17*Top{integer} 15|10m16 19r31 23r20 41r20 42m24 42r38 55r31 62r20 79r31
+. 82r20 83m24 83r38 91m16 98r19 99r40 110r31 118r19
+X 15 reversi_stack.adb
+8U15 StackInit 8b15 8=26 11l9 11t18
+8r26 AStack{14|6R14} 10m9
+19i9 M{integer} 20r37 24r29 25r30 25r54 26r30 27r30
+20i9 F{integer} 26r37 27r37
+55i9 M{integer} 63r29 64r39 64r59 65r39 65r59 69r30 69r54
+79i9 M{integer}
+

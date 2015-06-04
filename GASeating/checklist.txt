@@ -1,0 +1,162 @@
+Name: Joe
+Age: 22
+Profession: Student
+Likes: 4
+Basketball
+Chicken
+Computers
+Golf
+Dislikes: 1
+Volleyball
+With: 0
+
+Name: Ashley
+Age: 28
+Profession: Cheerleader
+Likes: 5
+Cooking
+Basketball
+Chicken
+Volleyball
+Bieber
+Dislikes: 1
+Golf
+With: 1
+Kobe
+
+Name: Kelly
+Age: 25
+Profession: Cheerleader
+Likes: 5
+Sports
+Basketball
+Chicken
+Volleyball
+Bieber
+Dislikes: 1
+Golf
+With: 0
+
+Name: Jordan
+Age: 25
+Profession: Student
+Likes: 3
+JayZ
+Basketball
+Chicken
+Dislikes: 3
+Volleyball
+Golf
+Bieber
+With: 0
+
+Name: Jimmy
+Age: 30
+Profession: Teacher
+Likes: 6
+Computers
+Basketball
+Tennis
+Computers
+Golf
+Games
+Dislikes: 0
+With : 0
+
+Name: Kobe
+Age: 36
+Profession: Player
+Likes: 6
+Basketball
+Tennis
+Golf
+Gym
+Games
+Chicken
+Dislikes: 0
+With: 1
+Ashley
+
+Name: Arnold
+Age: 45
+Profession: Actor
+Likes: 4
+Pong
+Tennis
+Golf
+Gym
+Dislikes: 1
+Losers
+With: 0
+
+Name: Bob
+Age: 30
+Profession: Builder
+Likes: 1
+Metallica
+Dislikes: 1
+Bieber
+With: 1
+Jane
+
+Name: Jane
+Age: 28
+Profession: Model
+Likes: 3
+Shopping
+Fashion
+Beauty
+Dislikes: 2
+Cats
+Dogs
+With: 0
+Bob
+
+Name: Derrick
+Age: 20
+Profession: Student
+Likes: 2
+Beer
+Alcohol
+Dislikes: 1
+Dogs
+With: 0
+
+Name: Adam
+Age: 8
+Profession: Child
+Likes: 5
+Firefighter
+Cats
+Dogs
+Cartoons
+Guns
+Dislikes: 1
+Vegatables
+With: 0
+
+Name: Jane
+Age: 10
+Profession: Child
+Likes: 3
+Games
+Cartoons
+Barbies
+Dislikes: 1
+Vegatables
+With: 1
+George
+
+Name: George
+Age: 10
+Profession: Child
+Likes: 4
+Games
+Cartoons
+PowerRangers
+Candy
+Dislikes: 2
+Vegatables
+School
+With: 1
+Jane

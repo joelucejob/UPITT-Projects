@@ -1,0 +1,92 @@
+V "GNAT Lib v6.2"
+M P W=b
+P SS ZX
+R nnnnnnnvnnnnnnnnnnnnnnvnnnnnnnnnnnnnnnnnnnnnnnnnnnnnvnnnnnnnnnnnnnnnnnnnnn
+
+U reversi_game%b	reversi_game.adb	0d925c31 NE OO SU IL
+W ada%s			ada.ads			ada.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W reversi%s		reversi.adb		reversi.ali
+W reversi_queue%s	reversi_queue.adb	reversi_queue.ali
+W reversi_stack%s	reversi_stack.adb	reversi_stack.ali
+
+D ada.ads		20080522031727 9c7dd3ea
+D a-except.ads		20080522031647 b54b55de
+D a-finali.ads		20080522031650 9eaacebd
+D a-filico.ads		20080522031649 9299732a
+D a-inteio.ads		20080522031650 03bc737c
+D a-ioexce.ads		20080522031652 be0900a0
+D a-stream.ads		20080522031703 34aca5be
+D a-tags.ads		20080522031712 bfa07446
+D a-textio.ads		20080522031713 bc6e78fe
+D a-tiinio.ads		20080522031716 949a7272
+D a-unccon.ads		20080522031717 51e09df2
+D interfac.ads		20080522031816 a69cad5c
+D i-cstrea.ads		20080522031813 e1e064a9
+D reversi.ads		20140424071943 757575fe
+D reversi_game.adb	20140424071833 5b961a6b
+D reversi_queue.ads	20140424071643 6413b4b8
+D reversi_stack.ads	20140424071616 f8b08c9e
+D system.ads		20080522032001 53113720
+D s-crtl.ads		20080522031842 997234a1
+D s-exctab.ads		20080522031843 5c1c61ae
+D s-ficobl.ads		20080522031845 8bb681e5
+D s-finimp.ads		20080522031846 9449f4cb
+D s-finroo.ads		20080522031846 1408f9d1
+D s-parame.ads		20080522031916 f32e56e9
+D s-secsta.ads		20080522031919 7bae3621
+D s-soflin.ads		20080522031920 0c6fd39d
+D s-stache.ads		20080522031922 257b3be8
+D s-stalib.ads		20080522031922 52b793d5
+D s-stoele.ads		20080522031923 ed966df3
+D s-stoele.adb		20080522031923 e9998c78
+D s-stratt.ads		20080522031924 fef7c1da
+D s-traent.ads		20080522031936 bd5f2753
+D s-unstyp.ads		20080522031937 c0f9fae5
+D s-wchcon.ads		20080522031943 ab028799
+X 1 ada.ads
+16K9*Ada 19e8 15|1r6 1r23 2r6 2r31
+X 5 a-inteio.ads
+18K13*Integer_Text_IO[10|48] 15|2w10 2r35
+X 9 a-textio.ads
+51K13*Text_IO 483e16 15|1w10 1r27
+169U14*New_Line 15|27r9 29r9 31r9 35r17 69r33
+211U14*Put 15|68r33
+211e19 Item{character} 15|68r37
+245U14*Put 15|26r9 28r9 30r9 34r17 66r33
+245s19 Item{string} 15|26r13 28r13 30r13 34r21 66r37
+X 10 a-tiinio.ads
+58U14*Get 15|32r9[5|18]
+59i7 Item{integer} 15|32r13[5|18]
+68U14*Put 15|65r33[5|18] 67r33[5|18]
+69i7 Item{integer} 15|65r37[5|18] 67r37[5|18]
+X 14 reversi.ads
+4K9*reversi 24e12 15|3w6 3r19
+6A14*Board_Type(integer) 15|15r14
+13U19*Intialize_Board 15|54r17
+16U19*Ask_Move 15|55r17
+X 15 reversi_game.adb
+7U11*reversi_game 7b11 76l5 76t17
+14i1 MENU_INPUT{integer} 51m14 52r19 53r12 56r15
+15a1 GAME_BOARD{14|6A14} 54m34 55m26
+16r1 GAME_HISTORY{17|6R14} 54m46 55m38 57r31 60r42
+17r1 HISTORY{16|4R6} 54m60 61m41 64m41
+21U11 menu 21b11 21<17 40l5 40t9 51r9
+21i17 INPUT{integer} 25m9 32m21 33r12 33r25 37r19 37r32
+44i1 Row{integer} 60m56 61r50 64m50 67r45
+44i6 T{integer} 57m17 58r20 59r37 63r37
+45e1 Col{character} 60m61 61r55 64m55 68r45
+59i29 i{integer} 60r66
+63i29 j{integer} 65r45
+X 16 reversi_queue.ads
+1K9*reversi_queue 15|5w6 5r25 16|23e18
+4R6*Queue 15|17r11 16|21e13
+10U13*Enqueue 15|61r33
+11U13*Dequeue 15|64r33
+X 17 reversi_stack.ads
+1K9*reversi_stack 15|4w6 4r25 17|51e18
+6R14*Stack 15|16r16 17|49e19
+26V18*GiveTurn{integer} 15|57r22
+28U19*GiveInfo 15|60r33
+
