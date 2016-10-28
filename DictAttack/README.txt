@@ -1,0 +1,1 @@
+Academic project used to perform a dictionary attack on an unsalted password using a library of frequently used passwords.
