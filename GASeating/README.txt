@@ -1,0 +1,3 @@
+Academic project to seat a list of people based on their friends, age, interests, dislikes, profressions, etc...
+I used a elitest genetic algothrims model, taking only the top 50% fitness scored for each generation.
+The user is allowed to set the starting amount of tables and seats per table before seating begins.
