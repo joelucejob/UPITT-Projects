@@ -1,0 +1,46 @@
+V "GNAT Lib v6.2"
+P ZX
+R nnnnnnnnnnnnnnnnnnvnnnnnnnnnnnnnnnnnnnnvnnnnnnnnnnnnnnnnnvnnnnnnnnnnnnnnnn
+
+U reversi_queue%b	reversi_queue.adb	b018a934 NE OO PK IL
+W ada.exceptions%s	a-except.adb		a-except.ali
+
+U reversi_queue%s	reversi_queue.ads	6413b4b8 EE OO PK IL
+W system%s		system.ads		system.ali
+W system.exception_table%s  s-exctab.adb	s-exctab.ali
+W system.standard_library%s  s-stalib.adb	s-stalib.ali
+
+D ada.ads		20080522031727 9c7dd3ea
+D a-except.ads		20080522031647 b54b55de
+D a-unccon.ads		20080522031717 51e09df2
+D reversi_queue.ads	20140424071643 6413b4b8
+D reversi_queue.adb	20140424071959 d40b1d8c
+D system.ads		20080522032001 53113720
+D s-exctab.ads		20080522031843 5c1c61ae
+D s-parame.ads		20080522031916 f32e56e9
+D s-stalib.ads		20080522031922 52b793d5
+D s-traent.ads		20080522031936 bd5f2753
+X 4 reversi_queue.ads
+1K9*reversi_queue 23l5 23e18 5|1b14 46l5 46t18
+3i1*Capacity{integer} 15r31 16r31 5|17r17
+4R6*Queue 9r36 10r33 11r33 17c8 21e13 5|5r36 12r33 28r33
+6X3*QueueFull 5|18r13
+7X3*QueueEmpty 5|34r13
+9U13*QMakeEmpty 9=25 5|5b13 8l7 8t17
+9r25 Q{4R6} 5|5b25 7m5
+10U13*Enqueue 10=22 10>40 10>56 5|12b13 24l7 24t14
+10r22 Q{4R6} 5|12b22 17r8 20m7 20r17 21m7 21r14 22m7 22r14
+10i40 R{integer} 5|13b22 21r25
+10e56 C{character} 5|14b22 22r25
+11U13*Dequeue 11=22 11<40 11<57 5|28b13 42l7 42t14
+11r22 Q{4R6} 5|28b22 33r8 36r12 37r12 38m7 38r17 38r32 38r42 39m7 39r17 39r32
+. 39r42 40m7 40r17
+11i40 R{integer} 5|29b22 36m7
+11e57 C{character} 5|30b22 37m7
+15A8 row_array(integer)<integer> 18r11
+16A8 col_array(character)<integer> 19r11
+18a5*Row{15A8} 5|21m9 36m14 38m9 38m34
+19a5*Col{16A8} 5|22m9 37m14 39m9 39m34
+20i5*Tail{natural} 5|7m7 17r10 20m9 20r19 21r16 22r16 33r10 38r19 38r44 39r19
+. 39r44 40m9 40r19
+

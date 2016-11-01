@@ -1,0 +1,2 @@
+Academic project to schedule a list of classes based on class size, time, days, professor preferences, etc... with the use of a genetic algothrims.
+I used a elitest genetic algothrims model, taking only the top 50% fitness scored for each generation.

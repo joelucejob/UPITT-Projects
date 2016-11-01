@@ -1,0 +1,981 @@
+Script started on Wed 23 Apr 2014 11:30:03 PM EDT
+]0;jvl7@acm:~/private/cs0458/game[?1034h[jvl7@acm game]$ cat reversi.ads
+with reversi_stack; use reversi_stack;
+ 
+package reversi is
+
+	type Board_Type is private;
+	subtype Col_Type is character;
+	subtype Row_Type is integer;
+
+	Wrong_Input : exception;
+	Surrender : exception;
+
+	Procedure Intialize_Board (B : out Board_Type);
+	Procedure Ask_Move(B : in out Board_Type; S : in out Stack);
+
+private
+
+        Capacity : natural := 8;
+        type Board_Type is array (1..Capacity, 1..Capacity) of integer;
+	Turn : natural := 1;
+
+end reversi;
+]0;jvl7@acm:~/private/cs0458/game[jvl7@acm game]$ cat reversi.ads_.adss.adst.adsa.adsc.adsk.ads
+package reversi_stack is
+
+        StackMaximum: constant integer := 64;
+	subtype RowItem is integer;
+	subtype ColItem is character;
+	type Stack is private;
+	type Flips is private;
+
+	StackUnderflow: EXCEPTION;
+	StackOverflow: EXCEPTION;
+	
+	procedure Push_Flips (AStack: in out Stack;
+			RItem : in RowItem;
+			CItem : in ColItem);
+	procedure Pop_Flips (AStack: in out Stack;
+		       RItem : out RowItem;
+		       CItem : out ColItem);
+        procedure Push_Move (AStack: in out Stack);
+
+        procedure Pop_Move (AStack: in out Stack);
+
+	procedure MakeEmpty (AStack : in out Stack);
+
+ 	function check_empty(AStack : in Stack) return boolean;
+
+private
+
+        type row_array is array (1..StackMaximum) of RowItem;
+        type col_array is array (1..StackMaximum) of ColItem;
+
+	type Flips is record
+		Row : row_array;
+		Col : col_array;
+		Top2 : integer range 0..StackMaximum := 0;
+	end record;
+
+        type Move_Array is array (1..StackMaximum) of Flips;
+
+        type Stack is record
+		Moves : Move_Array;
+                Top: integer range 0..StackMaximum := 0;
+        end record;
+
+end reversi_stack;
+]0;jvl7@acm:~/private/cs0458/game[jvl7@acm game]$ cat reversi_stack.ads[1P.ads[1P.ads[1P.ads[1P.ads[1P.ads[1P.ads[C[C[C[C[Kb
+with ada.text_io; use ada.text_io;
+with ada.integer_text_io; use ada.integer_text_io;
+with reversi_stack; use reversi_stack;
+
+package body reversi is
+
+---------------------------------------------------
+
+Procedure Intialize_Board (B : out Board_Type) is
+
+temp_num : integer;
+
+begin -- Intialize_Board
+	-- Reset the entire board
+	for i in 1..Capacity loop
+		for j in 1..Capacity loop
+			B(i,j) := 0;
+		end loop;
+	end loop;
+
+	-- Set the starting pieces
+	temp_num := (Capacity / 2);
+	B(temp_num, temp_num) := 1;
+        B(temp_num + 1, temp_num + 1) := 1;
+        B(temp_num + 1, temp_num) := 2;
+        B(temp_num, temp_num + 1) := 2;
+end Intialize_Board;
+
+---------------------------------------------------
+
+Procedure Print_Board (B : in Board_Type) is
+
+        Type Column_Type is array(1..10) of character;
+        Column_Axis : Column_Type := "abcdefghij";
+
+begin -- Print_Board
+
+	-- Create top axis
+        put (item => "  | ");
+	for i in 1..Capacity loop
+		put (item => Column_Axis(i));
+		put (item => " | ");				
+	end loop;
+	new_line;	
+        put (item => "  ");
+        for l in 1..Capacity loop
+        	put (item => "____");
+	end loop;
+	new_line;
+
+        -- Create board
+	--rows
+	for i in 1..Capacity loop	
+		-- columns
+		put (item => i, width => 1);
+        	put (item => " | ");
+        	for j in 1..Capacity loop
+		--empty
+		if B(i,j) = 0 then
+			put (item => " ");
+		--white
+		elsif B(i,j) = 1 then
+	                       put (item => "W");
+		--black
+		else
+			put (item => "B");
+		end if;
+                put (item => " | ");
+                if j = Capacity then
+                        put (item => i, width => 1);
+                end if;
+		end loop;
+
+		new_line;
+        	put (item => "  ");
+		for l in 1..Capacity loop
+			put (item => "____");
+		end loop;
+		new_line;
+	end loop;
+
+	-- Create bottom axis
+        put (item => "  | ");
+        for i in 1..Capacity loop
+        	put (item => Column_Axis(i));
+                put (item => " | ");
+        end loop;
+        new_line;
+
+end Print_Board;
+
+---------------------------------------------------
+
+Function Char_To_Int (S : in Col_Type) return integer is
+
+begin -- Char_To_Int
+
+	if S = 'a' then
+		return 1;
+	elsif S = 'b' then
+		return 2;
+        elsif S = 'c' then
+                return 3;
+        elsif S = 'd' then
+                return 4;
+        elsif S = 'e' then
+                return 5;
+        elsif S = 'f' then
+                return 6;
+        elsif S = 'g' then
+                return 7;
+        elsif S = 'h' then
+                return 8;
+        end if;
+	return -1;
+
+end Char_To_Int;
+
+---------------------------------------------------
+
+Function Valid (B : in Board_Type;
+                X, Y, dX, dY : in integer) return boolean is
+
+tempx, tempy : integer;
+
+begin -- valid
+
+	tempx := X;
+	tempy := Y;
+        --check if illegal coordinate
+        if Capacity >= X and
+           X >= 1 and
+           Capacity >= Y and
+           Y >= 1 then
+                --check is empty
+                if B(X, Y) /= 0 then
+			--nearby color is opposite
+                        if Turn = 1 and B(X, Y) = 2 then
+				tempx := tempx + dx;
+				tempy := tempy + dy;
+				--check if far color is same
+				while tempx >= 1 and
+				      Capacity >= tempx and
+				      tempy >= 1 and
+				      Capacity >= tempy loop
+					if B(tempx, tempy) = 1 then
+						return true;
+					end if;
+				        tempx := tempx + dx;
+				        tempy := tempy + dy;
+				end loop;
+			elsif Turn = 2 and B(X, Y) = 1 then
+                                tempx := tempx + dx;
+                                tempy := tempy + dy;
+                                while tempx >= 1 and
+                                      Capacity >= tempx and
+                                      tempy >= 1 and
+                                      Capacity >= tempy loop
+                                        if B(tempx, tempy) = 2 then
+                                                return true;
+                                        end if;
+                                        tempx := tempx + dx;
+                                        tempy := tempy + dy;
+				end loop;
+                        end if;
+                end if;
+        end if;
+        return false;
+
+end Valid;
+
+---------------------------------------------------
+
+Function Valid_Move (B : in Board_Type;
+		     R : in Row_Type;
+		     C : in integer) return boolean is
+
+tempx, tempy : integer;
+deltax, deltay : integer;
+
+begin -- Valid_Move
+        --check top left	
+	deltax := -1;
+	deltay := -1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+	if Valid(B, tempx, tempy, deltax, deltay) = true then
+		return true;
+	end if;
+	--check top
+	deltax := 0;
+        deltay := -1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+		return true;
+	end if;
+        --check top right
+        deltax := 1;
+        deltay := -1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                return true;
+        end if;
+        --check right
+        deltax := -1;
+        deltay := 0;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                return true;
+        end if;
+        --check left
+        deltax := 1;
+        deltay := 0;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                return true;
+        end if;
+        --check bottom left
+        deltax := -1;
+        deltay := 1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                return true;
+        end if;
+        --check bottom
+        deltax := 0;
+        deltay := 1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                return true;
+        end if;
+        --check bottom right
+        deltax := 1;
+        deltay := 1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                return true;
+        end if;
+	return false;
+
+end Valid_Move;
+
+---------------------------------------------------
+
+Function Int_To_Char (S : in RowItem) return character is
+
+begin -- Int_To_Char
+
+        if S = 1 then
+                return 'a';
+        elsif S = 2 then
+                return 'b';
+        elsif S = 3 then
+                return 'c';
+        elsif S = 4 then
+                return 'd';
+        elsif S = 5 then
+                return 'e';
+        elsif S = 6 then
+                return 'f';
+        elsif S = 7 then
+                return 'g';
+        elsif S = 8 then
+                return 'h';
+        end if;
+        return 'a';
+
+end Int_To_Char;
+
+---------------------------------------------------
+
+Procedure Flipper (B : in out Board_Type;
+                   X, Y, dX, dY : in integer;
+		   S : in out Stack) is
+
+tempx, tempy : integer;
+
+begin -- Flipper
+
+	tempx := X;
+	tempy := Y;
+        --check if illegal coordinate
+        if Capacity >= X and
+           X >= 1 and
+           Capacity >= Y and
+           Y >= 1 then
+                --check is empty
+                if B(X, Y) /= 0 then
+			--nearby color is opposite
+                        if Turn = 1 and B(X, Y) = 2 then
+				tempx := tempx + dx;
+				tempy := tempy + dy;
+				--if far color is opposite then flip
+				while tempx >= 1 and
+				      Capacity >= tempx and
+				      tempy >= 1 and
+				      Capacity >= tempy loop
+					if B(tempx, tempy) = 1 then
+						B(tempx - dx, tempy - dy) := 1;
+						Push_Flips(S, tempx - dx, Int_To_Char(tempy - dy));
+					end if;
+				        tempx := tempx + dx;
+				        tempy := tempy + dy;
+				end loop;
+			elsif Turn = 2 and B(X, Y) = 1 then
+                                tempx := tempx + dx;
+                                tempy := tempy + dy;
+                                while tempx >= 1 and
+                                      Capacity >= tempx and
+                                      tempy >= 1 and
+                                      Capacity >= tempy loop
+                                        if B(tempx, tempy) = 2 then
+                                                B(tempx - dx, tempy - dy) := 2;
+                                                Push_Flips(S, tempx - dx, Int_To_Char(tempy - dy));
+                                        end if;
+                                        tempx := tempx + dx;
+                                        tempy := tempy + dy;
+				end loop;
+                        end if;
+                end if;
+        end if;
+
+end Flipper;
+
+---------------------------------------------------
+
+Procedure Flip (B : in out Board_Type;
+		R : in Row_Type;
+		C : in integer;
+		S : in out Stack) is
+
+tempx, tempy : integer;
+deltax, deltay : integer;
+
+begin -- Flip
+
+        --flip top left	
+	deltax := -1;
+	deltay := -1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+	if Valid(B, tempx, tempy, deltax, deltay) = true then
+		Flipper(B, tempx, tempy, deltax, deltay, S);		
+	end if;
+	--flip top
+	deltax := 0;
+        deltay := -1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                Flipper(B, tempx, tempy, deltax, deltay, S);
+	end if;
+        --flip top right
+        deltax := 1;
+        deltay := -1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                Flipper(B, tempx, tempy, deltax, deltay, S);
+        end if;
+        --flip right
+        deltax := -1;
+        deltay := 0;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                Flipper(B, tempx, tempy, deltax, deltay, S);
+        end if;
+        --flip left
+        deltax := 1;
+        deltay := 0;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                Flipper(B, tempx, tempy, deltax, deltay, S);
+        end if;
+        --flip bottom left
+        deltax := -1;
+        deltay := 1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                Flipper(B, tempx, tempy, deltax, deltay, S);
+        end if;
+        --flip bottom
+        deltax := 0;
+        deltay := 1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                Flipper(B, tempx, tempy, deltax, deltay, S);
+        end if;
+        --flip bottom right
+        deltax := 1;
+        deltay := 1;
+        tempx := R + deltax;
+        tempy := C + deltay;
+        if Valid(B, tempx, tempy, deltax, deltay) = true then
+                Flipper(B, tempx, tempy, deltax, deltay, S);
+        end if;
+
+end Flip;
+
+---------------------------------------------------
+
+Procedure Undo_Move (B : in out Board_Type; Sa : in out Stack) is
+
+R : RowItem;
+C : ColItem;
+
+begin -- Undo_Move
+
+	while check_empty(Sa) = false loop
+		Pop_Flips(Sa, R, C);
+		if Turn = 1 then
+			B(R, Char_To_Int(C)) := 1;
+		else 
+                        B(R, Char_To_Int(C)) := 2;
+		end if;
+	end loop;
+        Pop_Flips(Sa, R, C);
+        B(R, Char_To_Int(C)) := 0;
+	
+	if Turn = 1 then
+		Turn := 2;
+	else 
+		Turn := 1;
+	end if;
+        Pop_Move(Sa);
+
+end Undo_Move;
+
+---------------------------------------------------
+
+Procedure Modify_Board (B : in out Board_Type;
+                        R : in Row_Type;
+                        C : in Col_Type;
+			S : in out Stack) is
+
+begin -- Modify_Board
+
+        if Turn = 1 then
+                B(R, Char_To_Int(C)) := 1;
+                Flip (B, R, Char_To_Int(C), S);
+        elsif Turn = 2 then
+                B(R, Char_To_Int(C)) := 2;
+                Flip (B, R, Char_To_Int(C), S);
+        else
+                raise Wrong_Input;
+        end if;
+
+        exception
+                when Surrender =>
+                        put (item => "Quit");
+                when Wrong_Input =>
+                        put (item => "Wrong Input");
+
+end Modify_Board;
+
+---------------------------------------------------
+
+Procedure Count_Flips (B : in Board_Type; 
+            	       Wh : out integer; 
+	       	       Bl : out integer) is
+
+White : integer := 0;
+Black : integer := 0;
+
+begin --Count_Flips
+
+	for i in 1..Capacity loop
+		for j in 1..Capacity loop
+			if B(i,j) = 1 then
+				White := White + 1;
+			elsif B(i,j) = 2 then
+				Black := Black + 1;
+			end if;	
+		end loop;
+	end loop;
+	Wh := White;
+	Bl := Black;
+
+end Count_Flips;
+
+
+---------------------------------------------------
+
+Function Check_Victory (B : in Board_Type) return boolean is 
+
+V : boolean := false;
+White : integer := 0;
+Black : integer := 0;
+
+begin -- Check_Victory
+
+	--check if any valid moves on the board
+	for i in 1..Capacity loop
+		for j in 1..Capacity loop
+			if V = false then
+				V := Valid(B, i, j, 0, 0);
+				put(item => "GG");
+				new_line;
+			end if;			
+		end loop;
+	end loop;
+
+        put(item => "GG2");
+
+	--if there are no valid moves left on the board
+	if V = false then
+		Count_Flips(B, White, Black);
+		if White > Black then
+			Put(item => "White is the winner!");
+			new_line;
+                elsif White = Black then
+                        put(item => "Its a tie!");
+                        new_line;
+		else
+			put(item => "Black is the winner!");
+			new_line;
+		end if;
+		put(item => "White: ");
+		put(item => White);
+		new_line;
+		put(item => "Black: ");
+		put(item => Black);
+		new_line;
+		return true;
+	end if;
+	return false;
+
+end Check_Victory;
+
+---------------------------------------------------
+
+Procedure Ask_Move (B : in out Board_Type; S : in out Stack) is
+
+INPUT, White, Black : integer := 0;
+ROW : Row_Type;
+COL : Col_Type;
+
+begin -- Ask_Move
+
+  loop
+        new_line(spacing => 2);
+        Print_Board(B);
+	new_line(spacing => 2);
+	if Turn = 1 then
+		put (item => "White's Turn:");
+		new_line;
+	else
+                put (item => "Black's Turn:");
+                new_line;
+	end if;
+	put (item => "What would you like to do?");
+	new_line;
+	put (item => "1. Play a move.");
+	new_line;
+	put (item => "2. Undo last move.");
+	new_line;
+	put (item => "3. Show history.");
+	new_line;
+	put (item => "4. Quit.");
+	new_line;
+	get (item => INPUT);
+	
+	--Play a move
+	if INPUT = 1 then
+	   --check if no more moves are left
+--		if Check_Victory(B) = false then
+--			exit;
+--	   	end if;
+                put (item => "Row(Integer):");
+		get (item => ROW);
+                put (item => "Column(Character):");
+        	get (item => COL);
+		new_line(spacing => 2);
+		-- Check if position is taken
+		if Valid_Move(B, ROW, Char_To_Int(COL)) = true then
+			Push_Move(S);
+			Push_Flips(S, ROW, COL); 
+			Modify_Board(B, ROW, COL, S);
+			-- Change player turn			
+	                if Turn = 1 then
+        	                Turn := 2;
+                	else
+                        	Turn := 1;
+                	end if;
+		else
+                	put (item => "Not a valid move.");
+			new_line;
+		end if;
+	end if;
+	if INPUT = 2 then
+		Undo_move(B, S);
+	end if;
+	if INPUT = 4 then
+                Count_Flips(B, White, Black);
+                if White > Black then
+                        Put(item => "White is the winner!");
+                        new_line;
+		elsif White = Black then
+			put(item => "Its a tie!");
+			new_line;
+                else
+                        put(item => "Black is the winner!");
+                        new_line;
+                end if;
+                put(item => "White: ");
+                put(item => White);
+                new_line;
+                put(item => "Black: ");
+                put(item => Black);
+                new_line;
+		exit;
+	end if;
+	new_line(spacing => 2);
+  end loop;
+
+end Ask_Move;
+
+--------------------------------------------------
+
+end reversi;
+]0;jvl7@acm:~/private/cs0458/game[jvl7@acm game]$ cat reversi.adb_.adbs.adbt.adba.adbc.adbk.adb
+with ada.text_io; use ada.text_io;
+with ada.integer_text_io; use ada.integer_text_io;
+
+package body reversi_stack is
+
+--------------------------------------------------
+
+    procedure StackInit (AStack: in out Stack) is
+    begin
+        AStack.Top := 0;
+    end StackInit;
+
+--------------------------------------------------
+
+    procedure Push_Flips (AStack: in out Stack;
+                    RItem : in RowItem;
+                    CItem : in ColItem) is
+
+        M : integer := AStack.Top;
+        F : integer := AStack.Moves(M).Top2 + 1;
+
+   begin -- Push
+         if AStack.Top < StackMaximum then
+            if AStack.Moves(M).Top2 < StackMaximum then
+                AStack.Moves(M).Top2 := AStack.Moves(M).Top2 + 1;
+                AStack.Moves(M).Row(F) := RItem;
+                AStack.Moves(M).Col(F) := CItem;
+            else
+	        raise StackOverflow;
+            end if;
+         else
+                raise StackOverflow;
+         end if;
+    end Push_Flips;
+
+--------------------------------------------------
+
+    procedure Push_Move (AStack: in out Stack) is
+   
+   begin -- Push
+         if AStack.Top < StackMaximum then
+             	AStack.Top := AStack.Top + 1;
+         else
+                put(item => "GG2");
+             	raise StackOverflow;
+         end if;
+    end Push_Move;
+
+--------------------------------------------------
+
+    procedure Pop_Flips (AStack: in out Stack;
+                   RItem : out RowItem;
+                   CItem : out ColItem) is
+
+        M : integer := AStack.Top;
+
+    begin -- Pop
+--                Put(item => AStack.Top);
+  --              Put(item => AStack.Moves(M).Top2);
+--		new_line;
+--		Put(item => "HAHA");
+         if AStack.Top > 0 then
+	    if AStack.Moves(M).Top2 > 0 then
+            	RItem := AStack.Moves(M).Row(AStack.Moves(M).Top2);
+           	CItem := AStack.Moves(M).Col(AStack.Moves(M).Top2);
+	--	put(Item => RItem);
+	--	put(item => CItem);
+	--	new_line;
+             	AStack.Moves(M).Top2 := AStack.Moves(M).Top2 - 1;
+	    end if;
+         end if;
+    end Pop_Flips;
+
+
+--------------------------------------------------
+
+    procedure Pop_Move (AStack: in out Stack) is
+
+        M : integer := AStack.Top;
+
+    begin -- Pop
+         if AStack.Top > 0 then
+                AStack.Top := AStack.Top - 1;
+         end if;
+    end Pop_Move;
+
+--------------------------------------------------
+
+    procedure MakeEmpty (AStack : in out Stack) is
+    begin
+        AStack.Top := 0;
+    end MakeEmpty;
+
+--------------------------------------------------
+
+    function check_empty (AStack : in Stack) return boolean is
+    begin
+	if AStack.Top > 0 then
+		if AStack.Moves(AStack.Top).Top2 > 1 then
+			return false;
+		end if;
+	end if;
+	return true;
+    end check_empty;
+
+--------------------------------------------------
+
+end reversi_stack;
+]0;jvl7@acm:~/private/cs0458/game[jvl7@acm game]$ cat reversi_game.adb
+with ada.text_io; use ada.text_io;
+with ada.integer_text_io; use ada.integer_text_io;
+with reversi; use reversi;
+with reversi_stack; use reversi_stack;
+
+procedure reversi_game is
+
+---------------------------------------------------
+-- Author : Joseph Luce
+-- This program recreates the game reversi
+---------------------------------------------------
+
+MENU_INPUT : integer;	-- user input for menu options
+GAME_BOARD : Board_Type;
+GAME_HISTORY : Stack;
+
+---------------------------------------------------
+
+procedure menu (INPUT : out integer) is
+	
+begin -- menu
+  loop
+	INPUT := 0;
+	put(item => "1: Play Game");
+	new_line;
+        put(item => "2: Replay Last Game");
+        new_line;
+        put(item => "3: Options");
+        new_line;
+        put(item => "4: Quit");
+        new_line;
+	get(item => INPUT);
+	if INPUT < 1 or INPUT > 3 then
+		put(item => "Incorrect menu option.");
+		new_line;
+	end if;
+	exit when INPUT > 0 or INPUT < 3;
+  end loop;
+
+end menu;
+
+---------------------------------------------------
+
+
+---------------------------------------------------
+
+begin -- reversi_game
+
+	menu(MENU_INPUT);
+	if MENU_INPUT = 1 then
+		Intialize_Board (GAME_BOARD);
+		Ask_Move(GAME_BOARD, GAME_HISTORY);
+	end if;
+
+end reversi_game;
+]0;jvl7@acm:~/private/cs0458/game[jvl7@acm game]$ gnatmake reversi_game.adb
+gcc -c reversi_game.adb
+gcc -c reversi.adb
+gnatbind -x reversi_game.ali
+gnatlink reversi_game.ali
+]0;jvl7@acm:~/private/cs0458/game[jvl7@acm game]$ ./reversi_game
+1: Play Game
+2: Replay Last Game
+3: Options
+4: Quit
+1
+
+
+  | a | b | c | d | e | f | g | h | 
+  ________________________________
+1 |   |   |   |   |   |   |   |   | 1
+  ________________________________
+2 |   |   |   |   |   |   |   |   | 2
+  ________________________________
+3 |   |   |   |   |   |   |   |   | 3
+  ________________________________
+4 |   |   |   | W | B |   |   |   | 4
+  ________________________________
+5 |   |   |   | B | W |   |   |   | 5
+  ________________________________
+6 |   |   |   |   |   |   |   |   | 6
+  ________________________________
+7 |   |   |   |   |   |   |   |   | 7
+  ________________________________
+8 |   |   |   |   |   |   |   |   | 8
+  ________________________________
+  | a | b | c | d | e | f | g | h | 
+
+
+White's Turn:
+What would you like to do?
+1. Play a move.
+2. Undo last move.
+3. Show history.
+4. Quit.
+1
+Row(Integer):4
+Column(Character):f
+
+
+
+
+
+
+  | a | b | c | d | e | f | g | h | 
+  ________________________________
+1 |   |   |   |   |   |   |   |   | 1
+  ________________________________
+2 |   |   |   |   |   |   |   |   | 2
+  ________________________________
+3 |   |   |   |   |   |   |   |   | 3
+  ________________________________
+4 |   |   |   | W | W | W |   |   | 4
+  ________________________________
+5 |   |   |   | B | W |   |   |   | 5
+  ________________________________
+6 |   |   |   |   |   |   |   |   | 6
+  ________________________________
+7 |   |   |   |   |   |   |   |   | 7
+  ________________________________
+8 |   |   |   |   |   |   |   |   | 8
+  ________________________________
+  | a | b | c | d | e | f | g | h | 
+
+
+Black's Turn:
+What would you like to do?
+1. Play a move.
+2. Undo last move.
+3. Show history.
+4. Quit.
+2
+
+
+
+
+  | a | b | c | d | e | f | g | h | 
+  ________________________________
+1 |   |   |   |   |   |   |   |   | 1
+  ________________________________
+2 |   |   |   |   |   |   |   |   | 2
+  ________________________________
+3 |   |   |   |   |   |   |   |   | 3
+  ________________________________
+4 |   |   |   | W | B |   |   |   | 4
+  ________________________________
+5 |   |   |   | B | W |   |   |   | 5
+  ________________________________
+6 |   |   |   |   |   |   |   |   | 6
+  ________________________________
+7 |   |   |   |   |   |   |   |   | 7
+  ________________________________
+8 |   |   |   |   |   |   |   |   | 8
+  ________________________________
+  | a | b | c | d | e | f | g | h | 
+
+
+White's Turn:
+What would you like to do?
+1. Play a move.
+2. Undo last move.
+3. Show history.
+4. Quit.
+4
+Its a tie!
+White:           2
+Black:           2
+]0;jvl7@acm:~/private/cs0458/game[jvl7@acm game]$ exit
+exit
+
+Script done on Wed 23 Apr 2014 11:31:46 PM EDT
